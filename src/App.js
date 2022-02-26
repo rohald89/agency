@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Route } from 'react-router-dom';
 import { gsap } from 'gsap';
 import './styles/App.scss';
@@ -21,18 +21,47 @@ const routes = [
   { path: '/about', name: 'About', Component: About },
 ];
 
+function debounce(fn, ms) {
+  let timer;
+  return () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      timer = null;
+      fn.apply(this, arguments);
+    }, ms);
+  };
+}
+
 function App() {
+  // prevent flashing
+  gsap.to('body', 0, { css: { visibility: 'visible' } });
+
+  const [dimensions, setDimensions] = useState({
+    height: window.innerHeight,
+    width: window.innerWidth,
+  });
   useEffect(() => {
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
 
-    // prevent flashing
-    gsap.to('body', 0, { css: { visibility: 'visible' } });
-  }, []);
+    const debouncedHandleResize = debounce(function handleResize() {
+      setDimensions({
+        height: window.innerHeight,
+        width: window.innerWidth,
+      });
+    }, 1000);
+
+    window.addEventListener('resize', debouncedHandleResize);
+
+    return () => {
+      window.removeEventListener('resize', debouncedHandleResize);
+    };
+  });
 
   return (
     <>
       <Header />
+      {console.log(dimensions)}
       <div className="App">
         {routes.map(({ path, Component }) => (
           <Route key={path} exact path={path}>
