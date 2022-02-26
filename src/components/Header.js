@@ -5,20 +5,22 @@ import gsap from 'gsap';
 
 let tl = gsap.timeline();
 
-function Header({ dimensions }) {
+function Header({ history, dimensions }) {
   const [menuState, setMenuState] = useState({ menuOpened: false });
 
   useEffect(() => {
+    history.listen(() => {
+      setMenuState({ menuOpened: false });
+    });
+
     if (menuState.menuOpened === true) {
       // run open menu animation
-      gsap.to('nav', { css: { display: 'block' } });
-      gsap.to('body', { css: { overflow: 'hidden' } });
-
-      tl.to('.App', {
-        duration: 1,
-        y: dimensions.width <= 654 ? '70vh' : dimensions.height / 2,
-        ease: 'expo.inOut',
-      })
+      tl.to('body', { duration: 0.01, css: { overflow: 'hidden' } })
+        .to('.App', {
+          duration: 1,
+          y: dimensions.width <= 654 ? '70vh' : dimensions.height / 2,
+          ease: 'expo.inOut',
+        })
         .to('.hamburger-menu span', {
           duration: 0.6,
           delay: -1,
@@ -119,11 +121,6 @@ function Header({ dimensions }) {
           css: {
             overflow: 'auto',
           },
-        })
-        .to('nav', {
-          css: {
-            display: 'none',
-          },
         });
     }
   }, [menuState.menuOpened]);
@@ -132,7 +129,9 @@ function Header({ dimensions }) {
       <div className="container">
         <div className="row v-center space-between">
           <div className="logo">
-            <a href="/">Agency.</a>
+            <NavLink to="/" exact>
+              Agency.
+            </NavLink>
           </div>
           <div className="nav-toggle">
             <div className="hamburger-menu" onClick={() => setMenuState({ menuOpened: true })}>
