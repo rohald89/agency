@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
 import { Route } from 'react-router-dom';
 import { gsap } from 'gsap';
-import Header from './components/Header';
 import './styles/App.scss';
 
-// components
+// Components
+import Header from './components/Header';
+import Navigation from './components/Navigation';
+// Pages
 import Home from './pages/home';
 import CaseStudies from './pages/caseStudies';
 import Approach from './pages/approach';
@@ -38,6 +40,7 @@ function App() {
           </Route>
         ))}
       </div>
+      <Navigation />
     </>
   );
 }
