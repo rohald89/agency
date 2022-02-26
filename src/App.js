@@ -1,60 +1,44 @@
 import { useEffect } from 'react';
-import gsap from 'gsap';
-import Banner from './components/Banner';
-import Cases from './components/Cases';
+import { Route } from 'react-router-dom';
+import { gsap } from 'gsap';
 import Header from './components/Header';
-import IntroOverlay from './components/IntroOverlay';
 import './styles/App.scss';
+
+// components
+import Home from './pages/home';
+import CaseStudies from './pages/caseStudies';
+import Approach from './pages/approach';
+import Services from './pages/services';
+import About from './pages/about';
+
+const routes = [
+  { path: '/', name: 'Home', Component: Home },
+  { path: '/case-studies', name: 'Case Studies', Component: CaseStudies },
+  { path: '/approach', name: 'Approach', Component: Approach },
+  { path: '/services', name: 'Services', Component: Services },
+  { path: '/about', name: 'About', Component: About },
+];
 
 function App() {
   useEffect(() => {
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
+
     // prevent flashing
     gsap.to('body', 0, { css: { visibility: 'visible' } });
-    // gsap timeline
-    const tl = gsap.timeline();
-
-    tl.from('.line span', 1.8, {
-      y: 100,
-      ease: 'power1.out',
-      delay: 1,
-      skewY: 7,
-      stagger: {
-        amount: 0.3,
-      },
-    })
-      .to('.overlay-top', 1.6, {
-        height: 0,
-        ease: 'expo.inOut',
-        stagger: 0.4,
-      })
-      .to('.overlay-bottom', 1.6, {
-        width: 0,
-        ease: 'expo.inOut',
-        delay: -0.8,
-        stagger: {
-          amount: 0.4,
-        },
-      })
-      .to('.intro-overlay', 0, { css: { display: 'none' } })
-      .from('.case-image img', 1.6, {
-        scale: 1.4,
-        ease: 'expo.inOut',
-        delay: -2,
-        stagger: {
-          amount: 0.3,
-        },
-      });
-  });
+  }, []);
 
   return (
-    <div className="App">
-      <IntroOverlay />
+    <>
       <Header />
-      <Banner />
-      <Cases />
-    </div>
+      <div className="App">
+        {routes.map(({ path, Component }) => (
+          <Route key={path} exact path={path}>
+            <Component />
+          </Route>
+        ))}
+      </div>
+    </>
   );
 }
 
