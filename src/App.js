@@ -41,7 +41,7 @@ function App() {
     width: window.innerWidth,
   });
   useEffect(() => {
-    let vh = window.innerHeight * 0.01;
+    let vh = dimensions.height * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
 
     const debouncedHandleResize = debounce(function handleResize() {
@@ -60,7 +60,7 @@ function App() {
 
   return (
     <>
-      <Header />
+      <Header dimensions={dimensions} />
       {console.log(dimensions)}
       <div className="App">
         {routes.map(({ path, Component }) => (
